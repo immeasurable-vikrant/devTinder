@@ -9,6 +9,11 @@ app.get("/user", (req, res) => {
     res.send({firstName: "Vikrant", lastName: "Singh"})
 })
 
+app.get("/user/:userId/:uuid", (req, res) => {
+    console.log("req", req.params)
+    res.send({userId: req.params.userId, uuid: req.params.uuid})
+})
+
 app.post("/user", (req, res) => {
     console.log("Save data to the database")
     res.send("Data successfully saved to the database")
