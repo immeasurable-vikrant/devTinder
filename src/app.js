@@ -1,27 +1,36 @@
 const express = require("express")
+const connectDB = require("./config/database")
+const User = require("./models/user")
 
 const app = express()
 
-
-// this will only handle GET call to /user
-app.get("/user", (req, res) => {
-    console.log("req", req.url)
-    res.send({firstName: "Vikrant", lastName: "Singh"})
+app.post("/signup", async (req, res, next) => {
+    const userObj = {
+        firstName: "Sushant",
+        lastName: "Singh",
+        emailId: "sushant.singh@gmail.com",
+        password: "sushant@12345",
+    }
+    try{
+        const user = new User(userObj)
+        await user.save()
+        console.log("res", res)
+        res.send("User added successfully!")
+    } catch (err) {
+        res.send(err)
+        res.status(400).send("Err saving user:")
+    }
+    
 })
 
-app.get("/user/:userId/:uuid", (req, res) => {
-    console.log("req", req.params)
-    res.send({userId: req.params.userId, uuid: req.params.uuid})
-})
 
-app.post("/user", (req, res) => {
-    console.log("Save data to the database")
-    res.send("Data successfully saved to the database")
-})
 
-// this "use" will match all the HTTP method API calls to "/test"
-app.use("/test", (req, res) => {
-    res.send("Hello from the server: /test!")
+connectDB().then(() => {
+    console.log("DB connection successful")
+    app.listen(3000, () => {
+        console.log("server listening at 3000")
+    })
 })
-
-app.listen(3000)
+.catch((err) => {
+    console.log(err, "DB cannot be accessed")
+})
