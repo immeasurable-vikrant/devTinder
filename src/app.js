@@ -3,16 +3,13 @@ const connectDB = require("./config/database")
 const User = require("./models/user")
 
 const app = express()
+// convert req
+app.use(express.json())
 
 app.post("/signup", async (req, res, next) => {
-    const userObj = {
-        firstName: "Sushant",
-        lastName: "Singh",
-        emailId: "sushant.singh@gmail.com",
-        password: "sushant@12345",
-    }
+    console.log("req body", req.body)
     try{
-        const user = new User(userObj)
+        const user = new User(req.body)
         await user.save()
         console.log("res", res)
         res.send("User added successfully!")
@@ -22,8 +19,6 @@ app.post("/signup", async (req, res, next) => {
     }
     
 })
-
-
 
 connectDB().then(() => {
     console.log("DB connection successful")
